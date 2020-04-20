@@ -18,10 +18,6 @@
  */
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.ServiceProcess;
-using System.Threading;
 
 namespace Wnmp.Programs
 {
@@ -44,7 +40,7 @@ namespace Wnmp.Programs
             }
         }
 
-        public void GenerateSSLKeyPair()
+        public void GenerateSslKeyPair()
         {
             try
             {

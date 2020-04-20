@@ -17,13 +17,10 @@
  *  along with Wnmp.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace Wnmp.Programs
 {
@@ -46,15 +43,20 @@ namespace Wnmp.Programs
 
         protected void StartProcess(string exe, string args, bool waitforexit = false, Dictionary<string, string> envvariables = null)
         {
-            Process process = new Process();
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = Program.StartupPath;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.StartInfo.FileName = exe;
-            process.StartInfo.Arguments = args;
+            Process process = new Process
+            {
+                StartInfo =
+                {
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = Program.StartupPath,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = exe,
+                    Arguments = args
+                }
+            };
             if (envvariables != null)
             {
                 foreach (var v in envvariables)
@@ -93,8 +95,9 @@ namespace Wnmp.Programs
                 StartProcess(ExeFileName, StopArgs, true);
             }
             var procs = Process.GetProcessesByName(processName);
-            for (var i = 0; i < procs.Length; i++) {
-                procs[i].Kill();
+            foreach (var t in procs)
+            {
+                t.Kill();
             }
             Log.Notice("Stopped", ProgLogSection);
         }

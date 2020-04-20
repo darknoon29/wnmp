@@ -9,9 +9,24 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Wnmp</RootNamespace>
     <AssemblyName>Wnmp</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -83,64 +98,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Wnmp.Configuration\PHPConfigurationManager.cs" />
+    <Compile Include="Configuration\PHPConfigurationManager.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Wnmp.Programs\MariaDB.cs" />
-    <Compile Include="Wnmp.Programs\Nginx.cs" />
-    <Compile Include="Wnmp.Programs\PHP.cs" />
-    <Compile Include="Wnmp.Programs\WnmpProgram.cs" />
+    <Compile Include="Programs\MariaDB.cs" />
+    <Compile Include="Programs\Nginx.cs" />
+    <Compile Include="Programs\PHP.cs" />
+    <Compile Include="Programs\WnmpProgram.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="Wnmp.UI\AboutFrm.cs">
+    <Compile Include="UI\AboutFrm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Wnmp.UI\AboutFrm.Designer.cs">
+    <Compile Include="UI\AboutFrm.Designer.cs">
       <DependentUpon>AboutFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wnmp.UI\HostToIPFrm.cs">
+    <Compile Include="UI\HostToIPFrm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Wnmp.UI\HostToIPFrm.Designer.cs">
+    <Compile Include="UI\HostToIPFrm.Designer.cs">
       <DependentUpon>HostToIPFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wnmp.UI\HTTPHeadersFrm.cs">
+    <Compile Include="UI\HTTPHeadersFrm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Wnmp.UI\HTTPHeadersFrm.Designer.cs">
+    <Compile Include="UI\HTTPHeadersFrm.Designer.cs">
       <DependentUpon>HTTPHeadersFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wnmp.UI\MainFrm.cs">
+    <Compile Include="UI\MainFrm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Wnmp.UI\MainFrm.Designer.cs">
+    <Compile Include="UI\MainFrm.Designer.cs">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wnmp.UI\Misc.cs" />
-    <Compile Include="Wnmp.UI\OptionsFrm.cs">
+    <Compile Include="UI\Misc.cs" />
+    <Compile Include="UI\OptionsFrm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Wnmp.UI\OptionsFrm.Designer.cs">
+    <Compile Include="UI\OptionsFrm.Designer.cs">
       <DependentUpon>OptionsFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wnmp.Updater\UpdateProgressFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wnmp.Updater\UpdateProgressFrm.Designer.cs">
-      <DependentUpon>UpdateProgressFrm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Wnmp.Updater\UpdatePromptFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wnmp.Updater\UpdatePromptFrm.Designer.cs">
-      <DependentUpon>UpdatePromptFrm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Wnmp.Updater\Updater.cs" />
-    <Compile Include="Wnmp.Updater\WnmpUpdater.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -151,26 +152,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Wnmp.UI\AboutFrm.resx">
+    <EmbeddedResource Include="UI\AboutFrm.resx">
       <DependentUpon>AboutFrm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Wnmp.UI\HostToIPFrm.resx">
+    <EmbeddedResource Include="UI\HostToIPFrm.resx">
       <DependentUpon>HostToIPFrm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Wnmp.UI\HTTPHeadersFrm.resx">
+    <EmbeddedResource Include="UI\HTTPHeadersFrm.resx">
       <DependentUpon>HTTPHeadersFrm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Wnmp.UI\MainFrm.resx">
+    <EmbeddedResource Include="UI\MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Wnmp.UI\OptionsFrm.resx">
+    <EmbeddedResource Include="UI\OptionsFrm.resx">
       <DependentUpon>OptionsFrm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wnmp.Updater\UpdateProgressFrm.resx">
-      <DependentUpon>UpdateProgressFrm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wnmp.Updater\UpdatePromptFrm.resx">
-      <DependentUpon>UpdatePromptFrm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +178,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

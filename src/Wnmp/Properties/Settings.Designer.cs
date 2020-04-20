@@ -12,7 +12,7 @@ namespace Wnmp.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -32,42 +32,6 @@ namespace Wnmp.Properties {
             }
             set {
                 this["StartWithWindows"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AutoCheckForUpdates {
-            get {
-                return ((bool)(this["AutoCheckForUpdates"]));
-            }
-            set {
-                this["AutoCheckForUpdates"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("7")]
-        public uint UpdateFrequency {
-            get {
-                return ((uint)(this["UpdateFrequency"]));
-            }
-            set {
-                this["UpdateFrequency"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2012-12-01")]
-        public global::System.DateTime LastCheckForUpdate {
-            get {
-                return ((global::System.DateTime)(this["LastCheckForUpdate"]));
-            }
-            set {
-                this["LastCheckForUpdate"] = value;
             }
         }
         
@@ -157,18 +121,6 @@ namespace Wnmp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Default")]
-        public string PHPVersion {
-            get {
-                return ((string)(this["PHPVersion"]));
-            }
-            set {
-                this["PHPVersion"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9001")]
         public ushort PHPPort {
             get {
@@ -188,6 +140,30 @@ namespace Wnmp.Properties {
             }
             set {
                 this["PHPProcessCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public ushort NginxPort {
+            get {
+                return ((ushort)(this["NginxPort"]));
+            }
+            set {
+                this["NginxPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7.4")]
+        public string PHPVersion {
+            get {
+                return ((string)(this["PHPVersion"]));
+            }
+            set {
+                this["PHPVersion"] = value;
             }
         }
     }

@@ -19,28 +19,31 @@
 
 using System;
 using System.Windows.Forms;
+using Wnmp.Properties;
+using Wnmp.UI;
 
-namespace Wnmp.Updater
+namespace Wnmp.Wnmp.UI
 {
-    public partial class UpdateProgressFrm : Form
+    public partial class AboutFrm : Form
     {
-        protected override CreateParams CreateParams
-        {
-            get {
-                CreateParams cp = base.CreateParams;
-                cp.Style &= ~0x00040000; // Remove WS_THICKFRAME (Disables resizing)
-                return cp;
-            }
-        }
-
-        public UpdateProgressFrm()
+        public AboutFrm()
         {
             InitializeComponent();
         }
 
-        private void CancelDownloadButton_Click(object sender, EventArgs e)
+        private void AboutFrm_Load(object sender, EventArgs e)
+        {
+            wnmpversionLabel.Text = Resources.AboutFrm_Wnmp_Version__ + Application.ProductVersion;
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void wnmpWebsiteLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Misc.StartProcessAsync("https://wnmp.x64architecture.com");
         }
     }
 }

@@ -24,9 +24,9 @@ using System.Text.RegularExpressions;
 
 namespace Wnmp.Configuration
 {
-    class PHPConfigurationManager
+    class PhpConfigurationManager
     {
-        public class PHPExtension
+        public class PhpExtension
         {
             public int LineNum;
             public string Name;
@@ -34,25 +34,25 @@ namespace Wnmp.Configuration
             public bool ZendExtension;
         }
 
-        public List<PHPExtension> PHPExtensions;
+        public List<PhpExtension> PHPExtensions;
 
         private string IniFilePath;
         private string[] TmpIniFile;
 
-        private void LoadPHPIni()
+        private void LoadPhpIni()
         {
             TmpIniFile = File.ReadAllLines(IniFilePath);
         }
 
-        public void LoadPHPExtensions(string phpBinPath)
+        public void LoadPhpExtensions(string phpBinPath)
         {
             if (phpBinPath == "Default")
                 IniFilePath = Program.StartupPath + "/php/php.ini";
             else
-                IniFilePath = Program.StartupPath + "/php/phpbins/" + phpBinPath + "/php.ini";
+                IniFilePath = Program.StartupPath + "/php/" + phpBinPath + "/php.ini";
 
-            LoadPHPIni();
-            PHPExtensions = new List<PHPExtension>();
+            LoadPhpIni();
+            PHPExtensions = new List<PhpExtension>();
 
             for (int linenum = 0; linenum < TmpIniFile.Length; linenum++) {
                 string str = TmpIniFile[linenum].Trim();
@@ -66,7 +66,7 @@ namespace Wnmp.Configuration
                 // (zend_extension|extension)\s*\=\s*["]?(.*?\.dll)
                 var m = Regex.Match(str, @"(zend_extension|extension)(=)((?:[a-z][a-z0-9_]*))");
                 if (m.Success) {
-                    PHPExtension Ext = new PHPExtension() {
+                    PhpExtension Ext = new PhpExtension() {
                         Name = m.Groups[3].Value,
                         ZendExtension = m.Groups[1].Value == "zend_extension",
                         Enabled = str[0] != ';',
@@ -77,11 +77,11 @@ namespace Wnmp.Configuration
             }
         }
 
-        public void SavePHPIniOptions()
+        public void SavePhpIniOptions()
         {
             foreach (var ext in PHPExtensions) {
                 string extension_token = ext.ZendExtension ? "zend_extension" : "extension";
-                TmpIniFile[ext.LineNum] = String.Format("{0}{1}={2}", ext.Enabled ? "" : ";", extension_token, ext.Name);
+                TmpIniFile[ext.LineNum] = $"{(ext.Enabled ? "" : ";")}{extension_token}={ext.Name}";
             }
             File.WriteAllLines(IniFilePath, TmpIniFile);
         }

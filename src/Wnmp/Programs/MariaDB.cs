@@ -21,14 +21,13 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
-using System.Threading;
 
 namespace Wnmp.Programs
 {
     class MariaDBProgram : WnmpProgram
     {
         private const string ServiceName = "Wnmp-MariaDB";
-        private ServiceController MariaDBController = new ServiceController();
+        private readonly ServiceController MariaDBController = new ServiceController();
 
         public MariaDBProgram(string exeFile) : base(exeFile)
         {
@@ -42,7 +41,7 @@ namespace Wnmp.Programs
             try {
                 MariaDBController.Close();
                 StartProcess("cmd.exe", StopArgs, true);
-            } catch (Exception) { }
+            } catch (Exception e) { Log.Error(e.Message); }
         }
 
         public void InstallService()
@@ -59,8 +58,9 @@ namespace Wnmp.Programs
         public bool ServiceExists()
         {
             ServiceController[] services = ServiceController.GetServices();
-            for (var i = 0; i < services.Length; i++) {
-                if (services[i].ServiceName == ServiceName)
+            foreach (var t in services)
+            {
+                if (t.ServiceName == ServiceName)
                     return true;
             }
             return false;

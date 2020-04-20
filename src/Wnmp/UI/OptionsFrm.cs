@@ -33,7 +33,7 @@ namespace Wnmp.UI
     {
         public MainFrm mainForm;
         private string Editor;
-        private PHPConfigurationManager PHPConfigurationMgr = new PHPConfigurationManager();
+        private PhpConfigurationManager PHPConfigurationMgr = new PhpConfigurationManager();
 
         public OptionsFrm(MainFrm form)
         {
@@ -64,8 +64,6 @@ namespace Wnmp.UI
             StartPHPLaunchCB.Checked = Properties.Settings.Default.StartPHPOnLaunch;
             StartMinimizedToTray.Checked = Properties.Settings.Default.StartMinimizedToTray;
             MinimizeWnmpToTray.Checked = Properties.Settings.Default.MinimizeToTray;
-            autoUpdateCheckBox.Checked = Properties.Settings.Default.AutoCheckForUpdates;
-            updateCheckIntervalNumericUpDown.Value = Properties.Settings.Default.UpdateFrequency;
             PHP_PROCESSES.Value = Properties.Settings.Default.PHPProcessCount;
             PHP_PORT.Value = Properties.Settings.Default.PHPPort;
             MinimizeToTrayInsteadOfClosing.Checked = Properties.Settings.Default.MinimizeInsteadOfClosing;
@@ -91,10 +89,8 @@ namespace Wnmp.UI
             Properties.Settings.Default.StartMinimizedToTray = StartMinimizedToTray.Checked;
             Properties.Settings.Default.MinimizeToTray = MinimizeWnmpToTray.Checked;
             Properties.Settings.Default.MinimizeInsteadOfClosing = MinimizeToTrayInsteadOfClosing.Checked;
-            Properties.Settings.Default.AutoCheckForUpdates = autoUpdateCheckBox.Checked;
             Properties.Settings.Default.PHPProcessCount = (uint)PHP_PROCESSES.Value;
             Properties.Settings.Default.PHPPort = (ushort)PHP_PORT.Value;
-            Properties.Settings.Default.UpdateFrequency = (uint)updateCheckIntervalNumericUpDown.Value;
             StartWithWindows();
             UpdateNgxPHPConfig();
             Properties.Settings.Default.PHPVersion = phpBin.Text;
@@ -106,11 +102,7 @@ namespace Wnmp.UI
             SetSettings();
             Properties.Settings.Default.Save();
             /* Setup custom PHP without restart */
-            if (Properties.Settings.Default.PHPVersion == "Default") {
-                mainForm.SetupPHP();
-            } else {
-                mainForm.SetupCustomPHP();
-            }
+                mainForm.SetupPhp();
             Close();
         }
 
@@ -144,16 +136,11 @@ namespace Wnmp.UI
             SetEditor();
         }
 
-        private void EditorTB_DoubleClick(object sender, EventArgs e)
-        {
-            SetEditor();
-        }
-
         private string[] PhpVersions()
         {
-            if (Directory.Exists(Program.StartupPath + "/php/phpbins") == false)
+            if (Directory.Exists(Program.StartupPath + "/php") == false)
                 return new string[0];
-            return Directory.GetDirectories(Program.StartupPath + "/php/phpbins").Select(d => new DirectoryInfo(d).Name).ToArray();
+            return Directory.GetDirectories(Program.StartupPath + "/php").Select(d => new DirectoryInfo(d).Name).ToArray();
         }
 
         private void UpdateNgxPHPConfig()
@@ -162,7 +149,7 @@ namespace Wnmp.UI
             uint PHPProcesses = (uint)PHP_PROCESSES.Value;
 
             using (var sw = new StreamWriter(Program.StartupPath + "/conf/php_processes.conf")) {
-                sw.WriteLine("# DO NOT MODIFY!!! THIS FILE IS MANAGED BY THE WNMP CONTROL PANEL.\r\n");
+                sw.WriteLine("# DO NOT MODIFY!!! THIS FILE IS GENERATED AUTOMATICALLY.\r\n");
                 sw.WriteLine("upstream php_processes {");
                 sw.WriteLine("    server 127.0.0.1:" + port + " weight=1;");
                 sw.WriteLine("}");
@@ -191,13 +178,13 @@ namespace Wnmp.UI
             for (var i = 0; i < phpExtListBox.Items.Count; i++) {
                 PHPConfigurationMgr.PHPExtensions[i].Enabled = phpExtListBox.GetItemChecked(i);
             }
-            PHPConfigurationMgr.SavePHPIniOptions();
+            PHPConfigurationMgr.SavePhpIniOptions();
         }
 
         private void PhpBin_SelectedIndexChanged(object sender, EventArgs e)
         {
             phpExtListBox.Items.Clear();
-            PHPConfigurationMgr.LoadPHPExtensions(phpBin.Text);
+            PHPConfigurationMgr.LoadPhpExtensions(phpBin.Text);
 
             foreach (var ext in PHPConfigurationMgr.PHPExtensions)
                 phpExtListBox.Items.Add(ext.Name, ext.Enabled);

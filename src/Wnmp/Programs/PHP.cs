@@ -34,10 +34,7 @@ namespace Wnmp.Programs
 
         private string GetPHPIniPath()
         {
-            if (Properties.Settings.Default.PHPVersion == "Default")
-                return Program.StartupPath + "/php/php.ini";
-            else
-                return Program.StartupPath + "/php/phpbins/" + Properties.Settings.Default.PHPVersion + "/php.ini";
+            return Program.StartupPath + "/php/" + Properties.Settings.Default.PHPVersion + "/php.ini";
         }
 
         public override void Start()
@@ -51,8 +48,7 @@ namespace Wnmp.Programs
                 return;
             }
 
-            if (sock != null)
-                sock.Close();
+            sock?.Close();
             sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             sock.Bind(new IPEndPoint(IPAddress.Any, port));

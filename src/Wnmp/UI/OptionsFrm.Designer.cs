@@ -41,15 +41,11 @@
             this.StartMySQLLaunchCB = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.selecteditor = new System.Windows.Forms.Button();
-            this.updateCheckIntervalNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.StartPHPLaunchCB = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.StartWnmpWithWindows = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.autoUpdateCheckBox = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.editorTB = new System.Windows.Forms.TextBox();
             this.MinimizeWnmpToTray = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -67,7 +63,6 @@
             this.tabControl1.SuspendLayout();
             this.General.SuspendLayout();
             this.applicationSettingsGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updateCheckIntervalNumericUpDown)).BeginInit();
             this.PHP.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -117,15 +112,11 @@
             this.applicationSettingsGroupBox.Controls.Add(this.StartMySQLLaunchCB);
             this.applicationSettingsGroupBox.Controls.Add(this.label10);
             this.applicationSettingsGroupBox.Controls.Add(this.selecteditor);
-            this.applicationSettingsGroupBox.Controls.Add(this.updateCheckIntervalNumericUpDown);
-            this.applicationSettingsGroupBox.Controls.Add(this.label6);
             this.applicationSettingsGroupBox.Controls.Add(this.label1);
             this.applicationSettingsGroupBox.Controls.Add(this.StartPHPLaunchCB);
             this.applicationSettingsGroupBox.Controls.Add(this.label3);
             this.applicationSettingsGroupBox.Controls.Add(this.StartWnmpWithWindows);
             this.applicationSettingsGroupBox.Controls.Add(this.label2);
-            this.applicationSettingsGroupBox.Controls.Add(this.autoUpdateCheckBox);
-            this.applicationSettingsGroupBox.Controls.Add(this.label5);
             this.applicationSettingsGroupBox.Controls.Add(this.editorTB);
             this.applicationSettingsGroupBox.Controls.Add(this.MinimizeWnmpToTray);
             this.applicationSettingsGroupBox.Controls.Add(this.label4);
@@ -218,32 +209,6 @@
             this.selecteditor.UseVisualStyleBackColor = true;
             this.selecteditor.Click += new System.EventHandler(this.Selecteditor_Click);
             // 
-            // updateCheckIntervalNumericUpDown
-            // 
-            this.updateCheckIntervalNumericUpDown.Location = new System.Drawing.Point(226, 210);
-            this.updateCheckIntervalNumericUpDown.Maximum = new decimal(new int[] {
-            365,
-            0,
-            0,
-            0});
-            this.updateCheckIntervalNumericUpDown.Name = "updateCheckIntervalNumericUpDown";
-            this.updateCheckIntervalNumericUpDown.Size = new System.Drawing.Size(66, 20);
-            this.updateCheckIntervalNumericUpDown.TabIndex = 13;
-            this.updateCheckIntervalNumericUpDown.Value = new decimal(new int[] {
-            7,
-            0,
-            0,
-            0});
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(25, 213);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(154, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Update check interval (in days)";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -288,24 +253,6 @@
             this.label2.Size = new System.Drawing.Size(132, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Start Wnmp with Windows";
-            // 
-            // autoUpdateCheckBox
-            // 
-            this.autoUpdateCheckBox.AutoSize = true;
-            this.autoUpdateCheckBox.Location = new System.Drawing.Point(226, 190);
-            this.autoUpdateCheckBox.Name = "autoUpdateCheckBox";
-            this.autoUpdateCheckBox.Size = new System.Drawing.Size(15, 14);
-            this.autoUpdateCheckBox.TabIndex = 11;
-            this.autoUpdateCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(25, 190);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(158, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Automatically check for updates";
             // 
             // editorTB
             // 
@@ -482,7 +429,6 @@
             this.General.ResumeLayout(false);
             this.applicationSettingsGroupBox.ResumeLayout(false);
             this.applicationSettingsGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updateCheckIntervalNumericUpDown)).EndInit();
             this.PHP.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -508,15 +454,11 @@
         private System.Windows.Forms.CheckBox StartMySQLLaunchCB;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button selecteditor;
-        private System.Windows.Forms.NumericUpDown updateCheckIntervalNumericUpDown;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox StartPHPLaunchCB;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox StartWnmpWithWindows;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox autoUpdateCheckBox;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox editorTB;
         private System.Windows.Forms.CheckBox MinimizeWnmpToTray;
         private System.Windows.Forms.Label label4;

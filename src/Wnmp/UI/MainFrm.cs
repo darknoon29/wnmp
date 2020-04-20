@@ -23,7 +23,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Wnmp.Programs;
-using Wnmp.Updater;
 using Wnmp.Wnmp.UI;
 
 namespace Wnmp.UI
@@ -32,27 +31,28 @@ namespace Wnmp.UI
     {
         protected override CreateParams CreateParams
         {
-            get {
+            get
+            {
                 CreateParams cp = base.CreateParams;
                 cp.Style &= ~0x00040000; // Remove WS_THICKFRAME (Disables resizing)
                 return cp;
             }
         }
 
-        NginxProgram Nginx;
-        MariaDBProgram MariaDB;
-        PHPProgram PHP;
+        NginxProgram _nginx;
+        MariaDBProgram _mariaDb;
+        PHPProgram _php;
 
-        ContextMenuStrip NginxConfigContextMenuStrip, NginxLogContextMenuStrip;
-        ContextMenuStrip MariaDBConfigContextMenuStrip, MariaDBLogContextMenuStrip;
-        ContextMenuStrip PHPConfigContextMenuStrip, PHPLogContextMenuStrip;
-        private WnmpUpdater updater;
+        ContextMenuStrip _nginxConfigContextMenuStrip, _nginxLogContextMenuStrip;
+        ContextMenuStrip _mariaDbConfigContextMenuStrip, _mariaDbLogContextMenuStrip;
+        ContextMenuStrip _phpConfigContextMenuStrip, _phpLogContextMenuStrip;
         private NotifyIcon ni = new NotifyIcon();
-        private bool visiblecore = true;
+        private bool _visiblecore = true;
 
         private void SetupNginx()
         {
-            Nginx = new NginxProgram(Program.StartupPath + "\\nginx.exe") {
+            _nginx = new NginxProgram(Program.StartupPath + "\\nginx.exe")
+            {
                 ProgLogSection = Log.LogSection.Nginx,
                 StartArgs = "",
                 StopArgs = "-s stop",
@@ -63,7 +63,8 @@ namespace Wnmp.UI
 
         private void SetupMariaDB()
         {
-            MariaDB = new MariaDBProgram(Program.StartupPath + "\\mariadb\\bin\\mysqld.exe") {
+            _mariaDb = new MariaDBProgram(Program.StartupPath + "\\mariadb\\bin\\mysqld.exe")
+            {
                 ProgLogSection = Log.LogSection.MariaDB,
                 StartArgs = "--install-manual Wnmp-MariaDB",
                 StopArgs = "/c sc delete Wnmp-MariaDB",
@@ -72,24 +73,15 @@ namespace Wnmp.UI
             };
         }
 
-        public void SetupPHP()
-        {
-            PHP = new PHPProgram(Program.StartupPath + "\\php\\php-cgi.exe") {
-                ProgLogSection = Log.LogSection.PHP,
-                ConfDir = Program.StartupPath + "\\php\\",
-                LogDir = Program.StartupPath + "\\php\\logs\\"
-            };
-            SetCurlCAPath();
-        }
-
         private void SetCurlCAPath()
         {
-            string phpini = Program.StartupPath + "/php/php.ini";
+            string phpini = Program.StartupPath + "/php/" + Properties.Settings.Default.PHPVersion + "php.ini";
             if (!File.Exists(phpini))
                 return;
 
             string[] file = File.ReadAllLines(phpini);
-            for (int i = 0; i < file.Length; i++) {
+            for (int i = 0; i < file.Length; i++)
+            {
                 if (file[i].Contains("curl.cainfo") == false)
                     continue;
 
@@ -98,9 +90,12 @@ namespace Wnmp.UI
                 if (orginal == String.Empty)
                     continue;
                 string replace = "curl.cainfo = " + "\"" + Program.StartupPath + @"\contrib\cacert.pem" + "\"";
+
                 file[i] = replace;
             }
-            using (var sw = new StreamWriter(phpini)) {
+
+            using (var sw = new StreamWriter(phpini))
+            {
                 foreach (var line in file)
                     sw.WriteLine(line);
             }
@@ -117,53 +112,60 @@ namespace Wnmp.UI
                 return;
 
             var files = dInfo.GetFiles(GetFiles);
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 cms.Items.Add(file.Name);
             }
         }
 
         private void SetupConfigAndLogMenuStrips()
         {
-            NginxConfigContextMenuStrip = new ContextMenuStrip();
-            NginxConfigContextMenuStrip.ItemClicked += (s, e) => {
-                Misc.OpenFileEditor(Nginx.ConfDir + e.ClickedItem.ToString());
+            _nginxConfigContextMenuStrip = new ContextMenuStrip();
+            _nginxConfigContextMenuStrip.ItemClicked += (s, e) =>
+            {
+                Misc.OpenFileEditor(_nginx.ConfDir + e.ClickedItem.ToString());
             };
-            NginxLogContextMenuStrip = new ContextMenuStrip();
-            NginxLogContextMenuStrip.ItemClicked += (s, e) => {
-                Misc.OpenFileEditor(Nginx.LogDir + e.ClickedItem.ToString());
+            _nginxLogContextMenuStrip = new ContextMenuStrip();
+            _nginxLogContextMenuStrip.ItemClicked += (s, e) =>
+            {
+                Misc.OpenFileEditor(_nginx.LogDir + e.ClickedItem.ToString());
             };
-            MariaDBConfigContextMenuStrip = new ContextMenuStrip();
-            MariaDBConfigContextMenuStrip.ItemClicked += (s, e) => {
-                Misc.OpenFileEditor(MariaDB.ConfDir + e.ClickedItem.ToString());
+            _mariaDbConfigContextMenuStrip = new ContextMenuStrip();
+            _mariaDbConfigContextMenuStrip.ItemClicked += (s, e) =>
+            {
+                Misc.OpenFileEditor(_mariaDb.ConfDir + e.ClickedItem.ToString());
             };
-            MariaDBLogContextMenuStrip = new ContextMenuStrip();
-            MariaDBLogContextMenuStrip.ItemClicked += (s, e) => {
-                Misc.OpenFileEditor(MariaDB.LogDir + e.ClickedItem.ToString());
+            _mariaDbLogContextMenuStrip = new ContextMenuStrip();
+            _mariaDbLogContextMenuStrip.ItemClicked += (s, e) =>
+            {
+                Misc.OpenFileEditor(_mariaDb.LogDir + e.ClickedItem.ToString());
             };
-            PHPConfigContextMenuStrip = new ContextMenuStrip();
-            PHPConfigContextMenuStrip.ItemClicked += (s, e) => {
-                Misc.OpenFileEditor(PHP.ConfDir + e.ClickedItem.ToString());
+            _phpConfigContextMenuStrip = new ContextMenuStrip();
+            _phpConfigContextMenuStrip.ItemClicked += (s, e) =>
+            {
+                Misc.OpenFileEditor(_php.ConfDir + e.ClickedItem.ToString());
             };
-            PHPLogContextMenuStrip = new ContextMenuStrip();
-            PHPLogContextMenuStrip.ItemClicked += (s, e) => {
-                Misc.OpenFileEditor(PHP.LogDir + e.ClickedItem.ToString());
+            _phpLogContextMenuStrip = new ContextMenuStrip();
+            _phpLogContextMenuStrip.ItemClicked += (s, e) =>
+            {
+                Misc.OpenFileEditor(_php.LogDir + e.ClickedItem.ToString());
             };
-            DirFiles(Nginx.ConfDir, "*.conf", NginxConfigContextMenuStrip);
-            DirFiles(MariaDB.ConfDir, "my.ini", MariaDBConfigContextMenuStrip);
-            DirFiles(PHP.ConfDir, "php.ini", PHPConfigContextMenuStrip);
-            DirFiles(Nginx.LogDir, "*.log", NginxLogContextMenuStrip);
-            DirFiles(MariaDB.LogDir, "*.err", MariaDBLogContextMenuStrip);
-            DirFiles(PHP.LogDir, "*.log", PHPLogContextMenuStrip);
-
+            DirFiles(_nginx.ConfDir, "*.conf", _nginxConfigContextMenuStrip);
+            DirFiles(_mariaDb.ConfDir, "my.ini", _mariaDbConfigContextMenuStrip);
+            DirFiles(_php.ConfDir, "php.ini", _phpConfigContextMenuStrip);
+            DirFiles(_nginx.LogDir, "*.log", _nginxLogContextMenuStrip);
+            DirFiles(_mariaDb.LogDir, "*.err", _mariaDbLogContextMenuStrip);
+            DirFiles(_php.LogDir, "*.log", _phpLogContextMenuStrip);
         }
 
-        public void SetupCustomPHP()
+        public void SetupPhp()
         {
             string phpVersion = Properties.Settings.Default.PHPVersion;
-            PHP = new PHPProgram(Program.StartupPath + "\\php\\phpbins\\" + phpVersion + "\\php-cgi.exe") {
+            _php = new PHPProgram(Program.StartupPath + "\\php\\" + phpVersion + "\\php-cgi.exe")
+            {
                 ProgLogSection = Log.LogSection.PHP,
-                ConfDir = Program.StartupPath + "\\php\\phpbins\\" + phpVersion + "\\",
-                LogDir = Program.StartupPath + "\\php\\phpbins\\" + phpVersion + "\\logs\\",
+                ConfDir = Program.StartupPath + "\\php\\" + phpVersion + "\\",
+                LogDir = Program.StartupPath + "\\php\\" + phpVersion + "\\logs\\",
             };
         }
 
@@ -180,14 +182,13 @@ namespace Wnmp.UI
             if (File.Exists(keyFile) && File.Exists(certFile))
                 return;
 
-            Nginx.GenerateSSLKeyPair();
+            _nginx.GenerateSslKeyPair();
         }
 
         private MenuItem CreateWnmpProgramMenuItem(WnmpProgram prog)
         {
-            MenuItem item = new MenuItem();
+            MenuItem item = new MenuItem {Text = Log.LogSectionToString(prog.ProgLogSection)};
 
-            item.Text = Log.LogSectionToString(prog.ProgLogSection);
             MenuItem start = item.MenuItems.Add("Start");
             start.Click += (s, e) => { prog.Start(); };
             MenuItem stop = item.MenuItems.Add("Stop");
@@ -201,8 +202,9 @@ namespace Wnmp.UI
         private void SetupTrayMenu()
         {
             MenuItem controlpanel = new MenuItem("Wnmp Control Panel");
-            controlpanel.Click += (s, e) => {
-                visiblecore = true;
+            controlpanel.Click += (s, e) =>
+            {
+                _visiblecore = true;
                 base.SetVisibleCore(true);
                 WindowState = FormWindowState.Normal;
                 Show();
@@ -210,9 +212,9 @@ namespace Wnmp.UI
             ContextMenu cm = new ContextMenu();
             cm.MenuItems.Add(controlpanel);
             cm.MenuItems.Add("-");
-            cm.MenuItems.Add(CreateWnmpProgramMenuItem(Nginx));
-            cm.MenuItems.Add(CreateWnmpProgramMenuItem(MariaDB));
-            cm.MenuItems.Add(CreateWnmpProgramMenuItem(PHP));
+            cm.MenuItems.Add(CreateWnmpProgramMenuItem(_nginx));
+            cm.MenuItems.Add(CreateWnmpProgramMenuItem(_mariaDb));
+            cm.MenuItems.Add(CreateWnmpProgramMenuItem(_php));
             cm.MenuItems.Add("-");
             MenuItem exit = new MenuItem("Exit");
             exit.Click += (s, e) => { Application.Exit(); };
@@ -220,8 +222,9 @@ namespace Wnmp.UI
             cm.MenuItems.Add("-");
             ni.ContextMenu = cm;
             ni.Icon = Properties.Resources.logo;
-            ni.Click += (s, e) => {
-                visiblecore = true;
+            ni.Click += (s, e) =>
+            {
+                _visiblecore = true;
                 base.SetVisibleCore(true);
                 WindowState = FormWindowState.Normal;
                 Show();
@@ -231,20 +234,24 @@ namespace Wnmp.UI
 
         protected override void SetVisibleCore(bool value)
         {
-            if (visiblecore == false) {
+            if (_visiblecore == false)
+            {
                 value = false;
                 if (!IsHandleCreated)
                     CreateHandle();
             }
+
             base.SetVisibleCore(value);
         }
 
         public MainFrm()
         {
-            if (Properties.Settings.Default.StartMinimizedToTray) {
+            if (Properties.Settings.Default.StartMinimizedToTray)
+            {
                 Visible = false;
                 Hide();
             }
+
             InitializeComponent();
             Log.SetLogComponent(logRichTextBox);
             Log.Notice("Initializing Control Panel");
@@ -252,30 +259,30 @@ namespace Wnmp.UI
             Log.Notice("Wnmp Directory: " + Program.StartupPath);
             SetupNginx();
             SetupMariaDB();
-            if (Properties.Settings.Default.PHPVersion == "Default")
-                SetupPHP();
-            else
-                SetupCustomPHP();
+            SetupPhp();
             SetupConfigAndLogMenuStrips();
             SetupTrayMenu();
-            updater = new WnmpUpdater(this);
             CreateWnmpCertificate();
 
-            if (Properties.Settings.Default.StartMinimizedToTray) {
-                visiblecore = false;
+            if (Properties.Settings.Default.StartMinimizedToTray)
+            {
+                _visiblecore = false;
                 base.SetVisibleCore(false);
             }
 
-            if (Properties.Settings.Default.StartNginxOnLaunch) {
-                Nginx.Start();
+            if (Properties.Settings.Default.StartNginxOnLaunch)
+            {
+                _nginx.Start();
             }
 
-            if (Properties.Settings.Default.StartMariaDBOnLaunch) {
-                MariaDB.Start();
+            if (Properties.Settings.Default.StartMariaDBOnLaunch)
+            {
+                _mariaDb.Start();
             }
 
-            if (Properties.Settings.Default.StartPHPOnLaunch) {
-                PHP.Start();
+            if (Properties.Settings.Default.StartPHPOnLaunch)
+            {
+                _php.Start();
             }
         }
 
@@ -298,7 +305,7 @@ namespace Wnmp.UI
 
         private void CtxButton(object sender, ContextMenuStrip contextMenuStrip)
         {
-            var btnSender = (Button)sender;
+            var btnSender = (Button) sender;
             var ptLowerLeft = new Point(0, btnSender.Height);
             ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
             contextMenuStrip.Show(ptLowerLeft);
@@ -306,93 +313,93 @@ namespace Wnmp.UI
 
         private void NginxStartButton_Click(object sender, EventArgs e)
         {
-            Nginx.Start();
+            _nginx.Start();
         }
 
         private void MariadbStartButton_Click(object sender, EventArgs e)
         {
-            MariaDB.Start();
+            _mariaDb.Start();
         }
 
         private void PhpStartButton_Click(object sender, EventArgs e)
         {
-            PHP.Start();
+            _php.Start();
         }
 
         private void NginxStopButton_Click(object sender, EventArgs e)
         {
-            Nginx.Stop();
+            _nginx.Stop();
         }
 
         private void MariadbStopButton_Click(object sender, EventArgs e)
         {
-            MariaDB.Stop();
+            _mariaDb.Stop();
         }
 
         private void PhpStopButton_Click(object sender, EventArgs e)
         {
-            PHP.Stop();
+            _php.Stop();
         }
 
         private void NginxRestartButton_Click(object sender, EventArgs e)
         {
-            Nginx.Restart();
+            _nginx.Restart();
         }
 
         private void MariadbRestartButton_Click(object sender, EventArgs e)
         {
-            MariaDB.Restart();
+            _mariaDb.Restart();
         }
 
         private void PhpRestartButton_Click(object sender, EventArgs e)
         {
-            PHP.Restart();
+            _php.Restart();
         }
 
         private void NginxConfigButton_Click(object sender, EventArgs e)
         {
-            CtxButton(sender, NginxConfigContextMenuStrip);
+            CtxButton(sender, _nginxConfigContextMenuStrip);
         }
 
         private void MariadbConfigButton_Click(object sender, EventArgs e)
         {
-            CtxButton(sender, MariaDBConfigContextMenuStrip);
+            CtxButton(sender, _mariaDbConfigContextMenuStrip);
         }
 
         private void PhpConfigButton_Click(object sender, EventArgs e)
         {
-            CtxButton(sender, PHPConfigContextMenuStrip);
+            CtxButton(sender, _phpConfigContextMenuStrip);
         }
 
         private void NginxLogButton_Click(object sender, EventArgs e)
         {
-            CtxButton(sender, NginxLogContextMenuStrip);
+            CtxButton(sender, _nginxLogContextMenuStrip);
         }
 
         private void MariadbLogButton_Click(object sender, EventArgs e)
         {
-            CtxButton(sender, MariaDBLogContextMenuStrip);
+            CtxButton(sender, _mariaDbLogContextMenuStrip);
         }
 
         private void PhpLogButton_Click(object sender, EventArgs e)
         {
-            CtxButton(sender, PHPLogContextMenuStrip);
+            CtxButton(sender, _phpLogContextMenuStrip);
         }
 
         /* */
 
         public void StopAll()
         {
-            Nginx.Stop();
-            MariaDB.Stop();
-            PHP.Stop();
+            _nginx.Stop();
+            _mariaDb.Stop();
+            _php.Stop();
         }
 
         private void StartAllButton_Click(object sender, EventArgs e)
         {
-            Nginx.Start();
-            MariaDB.Start();
-            PHP.Start();
+            _nginx.Start();
+            _mariaDb.Start();
+            _php.Start();
         }
 
         private void StopAllButton_Click(object sender, EventArgs e)
@@ -400,14 +407,10 @@ namespace Wnmp.UI
             StopAll();
         }
 
-        private void CheckForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            updater.CheckForUpdates();
-        }
-
         private void GetHTTPHeadersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HTTPHeadersFrm httpHeadersFrm = new HTTPHeadersFrm() {
+            HTTPHeadersFrm httpHeadersFrm = new HTTPHeadersFrm()
+            {
                 StartPosition = FormStartPosition.CenterParent
             };
             httpHeadersFrm.Show(this);
@@ -415,30 +418,22 @@ namespace Wnmp.UI
 
         private void HostToIPToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HostToIPFrm hostToIPFrm = new HostToIPFrm() {
+            HostToIPFrm hostToIPFrm = new HostToIPFrm()
+            {
                 StartPosition = FormStartPosition.CenterParent
             };
             hostToIPFrm.Show(this);
         }
 
-        private void SupportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Misc.StartProcessAsync("https://groups.google.com/forum/#!forum/wnmp-users");
-        }
-
         private void WebsiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Misc.StartProcessAsync("https://wnmp.x64architecture.com");
-        }
-
-        private void DonateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Misc.StartProcessAsync("https://wnmp.x64architecture.com/contributing");
+            Misc.StartProcessAsync("https://ogsteam.fr");
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var aboutFrm = new AboutFrm() {
+            var aboutFrm = new AboutFrm()
+            {
                 StartPosition = FormStartPosition.CenterParent
             };
             aboutFrm.ShowDialog(this);
@@ -446,25 +441,28 @@ namespace Wnmp.UI
 
         private void ReportBugToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Misc.StartProcessAsync("https://github.com/wnmp/wnmp/issues/new");
+            Misc.StartProcessAsync("https://github.com/darknoon29/onmp/issues/new");
         }
 
         private void SetRunningStatusLabel(Label label, bool running)
         {
-            if (running) {
-                label.Text = "✓";
+            if (running)
+            {
+                label.Text = @"✓";
                 label.ForeColor = Color.Green;
-            } else {
-                label.Text = "X";
+            }
+            else
+            {
+                label.Text = @"X";
                 label.ForeColor = Color.DarkRed;
             }
         }
 
         private void AppsRunningTimer_Tick(object sender, EventArgs e)
         {
-            SetRunningStatusLabel(nginxrunning, Nginx.IsRunning());
-            SetRunningStatusLabel(phprunning, PHP.IsRunning());
-            SetRunningStatusLabel(mariadbrunning, MariaDB.IsRunning());
+            SetRunningStatusLabel(nginxrunning, _nginx.IsRunning());
+            SetRunningStatusLabel(phprunning, _php.IsRunning());
+            SetRunningStatusLabel(mariadbrunning, _mariaDb.IsRunning());
         }
 
         private void LocalhostToolStripMenuItem_Click(object sender, EventArgs e)
@@ -474,7 +472,7 @@ namespace Wnmp.UI
 
         private void OpenMariaDBShellButton_Click(object sender, EventArgs e)
         {
-            MariaDB.OpenShell();
+            _mariaDb.OpenShell();
         }
 
         private void WnmpDirButton_Click(object sender, EventArgs e)
@@ -484,10 +482,13 @@ namespace Wnmp.UI
 
         private void MainFrm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing && Properties.Settings.Default.MinimizeInsteadOfClosing) {
+            if (e.CloseReason == CloseReason.UserClosing && Properties.Settings.Default.MinimizeInsteadOfClosing)
+            {
                 e.Cancel = true;
                 Hide();
-            } else {
+            }
+            else
+            {
                 Properties.Settings.Default.Save();
             }
         }
